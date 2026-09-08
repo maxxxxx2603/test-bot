@@ -5,7 +5,13 @@ const { db, uploadsDir, cfg, setCfg } = require('../../db/database')
 function req_p(req,res,next){ if(!req.session.patron) return res.status(403).json({error:'Non authentifié'}); next() }
 
 router.post('/login', async (req,res) => {
-  const {password}=req.body; const stored=cfg('patron_password')
+  const {password}=req.body
+  // Priorité : variable d'environnement PATRON_PASSWORD
+  if(process.env.PATRON_PASSWORD){
+    if(password===process.env.PATRON_PASSWORD){ req.session.patron=true; return res.json({ok:true}) }
+    return res.status(401).json({error:'Mot de passe incorrect'})
+  }
+  const stored=cfg('patron_password')
   if(!stored){ if(!password||password.length<8) return res.status(400).json({error:'Min 8 car.',setup:true}); const b=require('bcryptjs'); setCfg('patron_password',await b.hash(password,12)); req.session.patron=true; return res.json({ok:true,first:true}) }
   const b=require('bcryptjs'); if(!await b.compare(password,stored)) return res.status(401).json({error:'Mot de passe incorrect'}); req.session.patron=true; res.json({ok:true})
 })
