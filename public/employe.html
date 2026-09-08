@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Employé</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    :root{--acc:#8b5cf6;--acc-d:rgba(139,92,246,.15);--acc-b:rgba(139,92,246,.35)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:#08090b;color:#eceef3;min-height:100vh}
+    input,select,textarea,button{font-family:inherit}
+    input[type=text],input[type=password],input[type=number],input[type=date],select,textarea{width:100%;padding:9px 12px;background:#0f1013;border:.5px solid rgba(255,255,255,.12);border-radius:8px;color:#eceef3;font-size:13px;outline:none;transition:border-color .15s}
+    input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+    textarea{resize:vertical}
+    #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 50% 40% at 50% 30%,rgba(139,92,246,.08),transparent)}
+    .lc{background:#0f1013;border:.5px solid var(--acc-b);border-radius:18px;padding:36px 30px;width:340px;text-align:center;box-shadow:0 0 40px rgba(139,92,246,.06)}
+    .lc-av{width:72px;height:72px;border-radius:50%;background:var(--acc-d);border:2px solid var(--acc-b);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--acc);margin:0 auto 14px}
+    .lc h2{font-size:18px;font-weight:600;margin-bottom:4px}
+    .lc p{font-size:12px;color:#7a7f96;margin-bottom:20px}
+    .lc label{display:block;text-align:left;font-size:12px;color:#7a7f96;margin-bottom:5px}
+    .lc-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--acc),#7c3aed);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}
+    .lc-btn:hover{opacity:.88}
+    .lc-info{background:var(--acc-d);border:.5px solid var(--acc-b);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--acc);margin-bottom:14px}
+    #login-error{font-size:12px;color:#ef4444;background:rgba(239,68,68,.08);border:.5px solid rgba(239,68,68,.25);border-radius:8px;padding:8px 12px;margin-top:8px;display:none}
+    #app{max-width:700px;margin:0 auto;padding:20px 16px;display:none;flex-direction:column;gap:14px}
+    #ent-titre{font-size:13px;font-weight:600;color:var(--acc);text-align:center;padding:6px 0;opacity:.7}
+    .profil-card{background:#0f1013;border:.5px solid var(--acc-b);border-radius:16px;padding:18px;display:flex;align-items:center;gap:16px}
+    .profil-av{width:60px;height:60px;border-radius:50%;border:2px solid var(--acc-b);flex-shrink:0;overflow:hidden;background:var(--acc-d);display:flex;align-items:center;justify-content:center}
+    .profil-info{flex:1;min-width:0}
+    .profil-name{font-size:17px;font-weight:600;margin-bottom:5px}
+    .profil-grade{margin-bottom:7px}
+    .profil-roles{display:flex;gap:5px;flex-wrap:wrap}
+    .btn-logout{background:rgba(239,68,68,.1);border:.5px solid rgba(239,68,68,.3);color:#ef4444;border-radius:7px;padding:5px 10px;cursor:pointer;font-size:12px}
+    .service-block{background:#0f1013;border:.5px solid rgba(255,255,255,.07);border-radius:14px;padding:16px}
+    .sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .sb-lbl{font-size:10px;color:#3d4260;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+    .chrono-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border-radius:8px;padding:10px 14px;margin-bottom:12px}
+    #chrono{font-size:26px;font-weight:700;font-family:monospace;color:#22c55e}
+    .btn-service{width:100%;padding:12px;border-radius:10px;background:rgba(34,197,94,.1);border:.5px solid rgba(34,197,94,.3);color:#22c55e;font-size:14px;font-weight:600;cursor:pointer}
+    .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .stat{background:#0f1013;border:.5px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;text-align:center}
+    .stat-l{font-size:9px;color:#3d4260;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+    .stat-v{font-size:18px;font-weight:700}
+    .stat-s{font-size:10px;color:#3d4260;margin-top:2px}
+    .section{background:#0f1013;border:.5px solid rgba(255,255,255,.07);border-radius:14px;padding:16px}
+    .sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--acc);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+    .sec-title i{font-size:14px}
+    .fg{margin-bottom:10px}
+    .fg label{font-size:11px;color:#7a7f96;display:block;margin-bottom:4px}
+    .file-zone{background:rgba(255,255,255,.03);border:.5px dashed rgba(255,255,255,.15);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:all .15s}
+    .file-zone:hover{background:var(--acc-d);border-color:var(--acc-b)}
+    .file-zone input{display:none}
+    .btn-decl{width:100%;padding:11px;border-radius:8px;background:var(--acc-d);border:.5px solid var(--acc-b);color:var(--acc);font-size:13px;font-weight:600;cursor:pointer}
+    .btn-decl:hover{background:rgba(139,92,246,.25)}
+    .abs-form{background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.07);border-radius:10px;padding:14px;margin-bottom:12px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:500px){.stats4{grid-template-columns:repeat(2,1fr)}.row2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="lc">
+    <div class="lc-av" id="l-initiales">RP</div>
+    <h2 id="l-tag">Espace Employé</h2>
+    <p>Dashboard personnel</p>
+    <div id="step-pwd">
+      <label>Mot de passe</label>
+      <input type="password" id="inp-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="lc-btn" onclick="doLogin()">Se connecter</button>
+    </div>
+    <div id="step-newpwd" style="display:none">
+      <div class="lc-info">🎉 Bienvenue ! Créez votre mot de passe.</div>
+      <label>Nouveau mot de passe (min 8 car.)</label>
+      <input type="password" id="inp-newpwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')setPassword()">
+      <button class="lc-btn" onclick="setPassword()">Créer mon accès</button>
+    </div>
+    <div id="login-error"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div id="ent-titre">🔧 Custom Shop RP</div>
+
+  <div class="profil-card">
+    <div class="profil-av" id="profil-avatar"></div>
+    <div class="profil-info">
+      <div class="profil-name" id="profil-name">—</div>
+      <div class="profil-grade" id="profil-grade"></div>
+      <div class="profil-roles" id="profil-roles"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+      <div style="font-size:11px;color:#3d4260" id="profil-embauche"></div>
+      <button class="btn-logout" onclick="logout()"><i class="ti ti-logout"></i></button>
+    </div>
+  </div>
+
+  <div class="service-block">
+    <div class="sb-head">
+      <span class="sb-lbl">Temps réel</span>
+      <span id="sb-status" style="font-size:11px;color:#7a7f96">Hors service</span>
+    </div>
+    <div class="chrono-row">
+      <span style="font-size:13px;color:#7a7f96">Service en cours</span>
+      <span id="chrono">00:00:00</span>
+    </div>
+    <button class="btn-service" id="btn-service" onclick="toggleService()">▶ Prendre le service</button>
+  </div>
+
+  <div class="stats4">
+    <div class="stat"><div class="stat-l">Customs mois</div><div class="stat-v" id="stat-customs">—</div></div>
+    <div class="stat"><div class="stat-l">CA total</div><div class="stat-v" style="color:var(--acc)" id="stat-ca">—</div></div>
+    <div class="stat"><div class="stat-l">Temps service</div><div class="stat-v" id="stat-temps">—</div></div>
+    <div class="stat"><div class="stat-l">Paye estimée</div><div class="stat-v" style="color:var(--acc)" id="stat-paye">—</div><div class="stat-s">non contractuelle</div></div>
+  </div>
+
+  <!-- Déclarer custom -->
+  <div class="section">
+    <div class="sec-title"><i class="ti ti-tool"></i>Déclarer une custom</div>
+    <div class="fg"><label>Montant de la custom ($)</label><input type="number" id="custom-montant" placeholder="Ex: 25000" min="0" step="500"></div>
+    <div class="fg"><label>Description (optionnel)</label><input type="text" id="custom-desc" placeholder="Ex: Full carrosserie + peinture custom"></div>
+    <div class="fg"><label>Photo de la facture (obligatoire)</label>
+      <div class="file-zone" onclick="el('custom-preuve').click()">
+        <i class="ti ti-file-invoice" style="font-size:22px;color:#3d4260;display:block;margin-bottom:6px"></i>
+        <div style="font-size:12px;color:#7a7f96">Cliquez pour ajouter la photo de la facture</div>
+        <div id="preuve-name" style="font-size:11px;color:var(--acc);margin-top:4px"></div>
+        <input type="file" id="custom-preuve" accept="image/*" onchange="el('preuve-name').textContent=this.files[0]?.name||''">
+      </div>
+    </div>
+    <button class="btn-decl" onclick="declarerCustom()"><i class="ti ti-send"></i> Envoyer la déclaration</button>
+  </div>
+
+  <!-- Absences -->
+  <div class="section">
+    <div class="sec-title"><i class="ti ti-calendar-off"></i>Absences</div>
+    <div class="abs-form">
+      <div class="row2">
+        <div class="fg"><label>Date début</label><input type="date" id="abs-debut"></div>
+        <div class="fg"><label>Date fin</label><input type="date" id="abs-fin"></div>
+      </div>
+      <div class="fg"><label>Raison (optionnel)</label><textarea id="abs-raison" placeholder="Vacances, obligations perso…" rows="2"></textarea></div>
+      <button class="btn-decl" onclick="declarerAbsence()"><i class="ti ti-send"></i> Déclarer l'absence</button>
+    </div>
+    <div id="absences-list"></div>
+  </div>
+
+  <!-- Historique customs -->
+  <div class="section">
+    <div class="sec-title"><i class="ti ti-history"></i>Mes customs ce mois</div>
+    <div id="customs-list"></div>
+  </div>
+
+  <!-- Avertissements -->
+  <div class="section">
+    <div class="sec-title"><i class="ti ti-alert-triangle"></i>Avertissements</div>
+    <div id="avert-list"></div>
+  </div>
+</div>
+
+<script>
+const api  = async (u,o={}) => (await fetch(u,{headers:{'Content-Type':'application/json'},credentials:'same-origin',...o})).json()
+const post = (u,b) => api(u,{method:'POST',body:JSON.stringify(b)})
+const el   = id => document.getElementById(id)
+const fmt  = n  => Number(n||0).toLocaleString('fr-FR')
+const fmtD = s  => s ? new Date(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—'
+const fmtH = m  => { const h=Math.floor(m/60),mn=m%60; return h?`${h}h${mn.toString().padStart(2,'0')}`:`${mn}min` }
+const SLUG = location.pathname.split('/e/')[1]?.split('/')[0]||''
+let _empId='', _timer=null, _serviceDebut=null
+
+async function initPage() {
+  if(!SLUG) return showDead('URL invalide')
+  const me = await api('/api/auth/me').catch(()=>({}))
+  if(me.role==='employe'){ launchApp(); return }
+  const emp = await api(`/api/employe/slug/${SLUG}`)
+  if(emp.error) return showDead('Espace introuvable')
+  el('l-initiales').textContent = emp.avatar_initiales||emp.discord_tag?.slice(0,2).toUpperCase()||'RP'
+  el('l-tag').textContent = emp.discord_tag||'Espace Employé'
+  if(emp.first_login||!emp.password_hash){ el('step-pwd').style.display='none'; el('step-newpwd').style.display='block' }
+}
+function showDead(msg){ document.body.innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px">${msg}</div>` }
+async function doLogin(){
+  const d=await post('/api/employe/login-slug',{slug:SLUG,password:el('inp-pwd').value.trim()})
+  if(d.error){ el('login-error').textContent=d.error; el('login-error').style.display='block'; return }
+  launchApp()
+}
+async function setPassword(){
+  const pwd=el('inp-newpwd').value.trim(); if(pwd.length<8){ el('login-error').textContent='Min 8 caractères'; el('login-error').style.display='block'; return }
+  const d=await post('/api/employe/set-password-slug',{slug:SLUG,password:pwd})
+  if(d.error){ el('login-error').textContent=d.error; el('login-error').style.display='block'; return }
+  launchApp()
+}
+async function launchApp(){ el('login-screen').style.display='none'; el('app').style.display='flex'; await loadAll() }
+async function logout(){ if(_timer) clearInterval(_timer); await post('/api/auth/logout',{}); location.reload() }
+
+async function loadAll(){
+  const d = await api('/api/employe/dashboard')
+  if(d.error){ showDead(d.error); return }
+  const { emp, grade, customs_mois, ca_mois, minutes_mois, paye_prev, session_active, absences, avertissements, config } = d
+  _empId = emp.discord_id
+  const acc = config?.couleur||'#8b5cf6'
+  document.documentElement.style.setProperty('--acc', acc)
+  document.documentElement.style.setProperty('--acc-d', acc+'25')
+  document.documentElement.style.setProperty('--acc-b', acc+'55')
+  const et=el('ent-titre'); if(et) et.textContent=(config?.emoji||'🔧')+' '+(config?.nom||'Custom Shop RP')
+
+  // Profil
+  const avEl=el('profil-avatar')
+  if(avEl) avEl.innerHTML=`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--acc)">${emp.avatar_initiales||emp.discord_tag?.slice(0,2).toUpperCase()||'RP'}</div>`
+  const nameEl=el('profil-name'); if(nameEl) nameEl.textContent=emp.discord_tag||'Employé'
+  const gradeEl=el('profil-grade')
+  if(gradeEl) gradeEl.innerHTML=`<span style="background:${grade?.couleur||acc}22;border:.5px solid ${grade?.couleur||acc}55;border-radius:99px;padding:3px 12px;font-size:12px;font-weight:600;color:${grade?.couleur||acc}">${grade?.emoji||'🔧'} ${emp.grade||'Technicien'}</span>`
+  const embEl=el('profil-embauche'); if(embEl) embEl.textContent='Depuis '+fmtD(emp.date_embauche)
+
+  // Photo + rôles Discord
+  api(`/api/employe/discord-profile/${emp.discord_id}`).then(prof=>{
+    if(prof.avatar_url&&avEl){
+      const img=document.createElement('img'); img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%'
+      img.onload=()=>{ avEl.innerHTML=''; avEl.appendChild(img) }; img.src=prof.avatar_url
+    }
+    if(prof.roles?.length){
+      const rolesEl=el('profil-roles')
+      if(rolesEl) rolesEl.innerHTML=prof.roles.slice(0,6).map(r=>`<span style="background:${r.couleur}18;border:.5px solid ${r.couleur}44;border-radius:99px;padding:2px 9px;font-size:11px;font-weight:500;color:${r.couleur}">${r.nom}</span>`).join('')
+    }
+  }).catch(()=>{})
+
+  // Stats
+  el('stat-customs').textContent = customs_mois.length
+  el('stat-ca').textContent = '$'+fmt(ca_mois)
+  el('stat-temps').textContent = fmtH(minutes_mois||0)
+  el('stat-paye').textContent = '~$'+fmt(Math.round(paye_prev||0))
+
+  // Service
+  if(session_active?.debut){
+    _serviceDebut=new Date(session_active.debut); startTimer()
+    const btn=el('btn-service'); if(btn){ btn.textContent='⏹ Fin de service'; btn.style.cssText='background:rgba(239,68,68,.12);border:.5px solid rgba(239,68,68,.4);color:#ef4444' }
+  }
+
+  // Customs
+  const cl=el('customs-list')
+  if(cl) cl.innerHTML=customs_mois.length?customs_mois.map(c=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid rgba(255,255,255,.06);font-size:12px">
+      <i class="ti ti-tool" style="color:var(--acc);font-size:14px;flex-shrink:0"></i>
+      <span style="flex:1;color:#eceef3">${c.description||'Custom véhicule'}</span>
+      <span style="color:var(--acc);font-weight:600">$${fmt(c.montant)}</span>
+      ${c.preuve_filename?`<a href="/uploads/${c.preuve_filename}" target="_blank" style="color:#60a5fa;font-size:11px"><i class="ti ti-photo"></i></a>`:''}
+      <span style="color:#3d4260">${fmtD(c.date)}</span>
+    </div>`).join(''):'<div style="color:#3d4260;font-size:12px;text-align:center;padding:12px">Aucune custom ce mois</div>'
+
+  // Absences
+  const pills={en_attente:'rgba(250,204,21,.12)|rgba(250,204,21,.3)|#facc15|En attente',accepte:'rgba(34,197,94,.1)|rgba(34,197,94,.3)|#22c55e|Acceptée',refuse:'rgba(239,68,68,.1)|rgba(239,68,68,.3)|#ef4444|Refusée'}
+  const al=el('absences-list')
+  if(al) al.innerHTML=absences.length?absences.map(a=>{
+    const [bg,bd,col,lbl]=(pills[a.statut]||pills.en_attente).split('|')
+    return `<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.07);border-radius:10px;font-size:12px;margin-bottom:7px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+        <span style="font-weight:500">${a.date_debut} → ${a.date_fin}</span>
+        <span style="background:${bg};border:.5px solid ${bd};border-radius:99px;padding:1px 8px;font-size:10px;color:${col}">${lbl}</span>
+      </div>
+      <div style="color:#7a7f96">${a.raison||'—'}</div>
+      ${a.note_patron?`<div style="color:var(--acc);font-size:11px;margin-top:3px">Note : ${a.note_patron}</div>`:''}
+    </div>`
+  }).join(''):'<div style="color:#3d4260;font-size:12px;text-align:center;padding:10px">Aucune absence déclarée</div>'
+
+  // Avertissements
+  const avl=el('avert-list')
+  if(avl) avl.innerHTML=avertissements.length?avertissements.map(a=>`
+    <div style="padding:9px 12px;background:rgba(239,68,68,.06);border:.5px solid rgba(239,68,68,.2);border-radius:8px;font-size:12px;margin-bottom:6px">
+      <div style="color:#ef4444">${a.message}</div>
+      <div style="color:#3d4260;font-size:11px;margin-top:2px">${fmtD(a.date)}</div>
+    </div>`).join(''):'<div style="color:#3d4260;font-size:12px">Aucun avertissement</div>'
+}
+
+function startTimer(){
+  if(_timer) clearInterval(_timer)
+  _timer=setInterval(()=>{
+    const e=el('chrono'); if(!e) return
+    const diff=Math.floor((Date.now()-_serviceDebut)/1000)
+    const h=Math.floor(diff/3600),m=Math.floor((diff%3600)/60),s=diff%60
+    e.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+  },1000)
+}
+
+async function toggleService(){
+  if(_serviceDebut){
+    const d=await post('/api/employe/service/fin',{})
+    if(d.ok){ clearInterval(_timer); _timer=null; _serviceDebut=null; el('chrono').textContent='00:00:00'; loadAll() }
+  } else {
+    const d=await post('/api/employe/service/debut',{})
+    if(d.ok){ _serviceDebut=new Date(); startTimer(); const btn=el('btn-service'); if(btn){btn.textContent='⏹ Fin de service';btn.style.cssText='background:rgba(239,68,68,.12);border:.5px solid rgba(239,68,68,.4);color:#ef4444'} }
+  }
+}
+
+async function declarerCustom(){
+  const montant=el('custom-montant')?.value, desc=el('custom-desc')?.value, preuve=el('custom-preuve')?.files?.[0]
+  if(!montant||isNaN(montant)){ alert('Renseigne le montant'); return }
+  if(!preuve){ alert('Photo de la facture obligatoire'); return }
+  const fd=new FormData(); fd.append('montant',montant); fd.append('description',desc||''); fd.append('preuve',preuve)
+  const r=await fetch('/api/employe/customs',{method:'POST',body:fd,credentials:'same-origin'})
+  const d=await r.json()
+  if(d.ok){ alert('Custom déclarée ✅'); el('custom-montant').value=''; el('custom-desc').value=''; el('custom-preuve').value=''; el('preuve-name').textContent=''; loadAll() }
+  else alert(d.error||'Erreur')
+}
+
+async function declarerAbsence(){
+  const debut=el('abs-debut')?.value, fin=el('abs-fin')?.value, raison=el('abs-raison')?.value
+  if(!debut||!fin){ alert('Renseigne les dates'); return }
+  if(new Date(fin)<new Date(debut)){ alert('Date de fin invalide'); return }
+  const d=await post('/api/employe/absences',{date_debut:debut,date_fin:fin,raison})
+  if(d.ok){ alert('Absence déclarée ✅ — en attente de validation'); el('abs-debut').value=''; el('abs-fin').value=''; el('abs-raison').value=''; loadAll() }
+  else alert(d.error||'Erreur')
+}
+
+initPage()
+</script>
+</body>
+</html>

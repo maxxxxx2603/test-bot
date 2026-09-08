@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Patron</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    :root{--acc:#8b5cf6;--acc-b:rgba(201,168,76,.35);--acc-d:rgba(201,168,76,.12)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:#08090b;color:#eceef3;min-height:100vh}
+    input,select,textarea,button{font-family:inherit}
+    input[type=text],input[type=password],input[type=number],select,textarea{width:100%;padding:9px 12px;background:#0f1013;border:.5px solid rgba(255,255,255,.12);border-radius:8px;color:#eceef3;font-size:13px;outline:none;transition:border-color .15s}
+    input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+    textarea{resize:vertical}
+    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+    #login-patron{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 50% 40% at 50% 30%,rgba(201,168,76,.08),transparent)}
+    .lc{background:#0f1013;border:.5px solid var(--acc-b);border-radius:18px;padding:36px 30px;width:340px;text-align:center}
+    .lc h2{font-size:20px;font-weight:700;background:linear-gradient(135deg,#8b5cf6,#f0c97e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+    .lc p{font-size:12px;color:#7a7f96;margin-bottom:20px}
+    .lc label{display:block;text-align:left;font-size:12px;color:#7a7f96;margin-bottom:5px}
+    .lc-btn{width:100%;padding:11px;background:linear-gradient(135deg,#8b5cf6,#b8922e);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}
+    .lc-setup{background:var(--acc-d);border:.5px solid var(--acc-b);border-radius:8px;padding:10px;font-size:12px;color:var(--acc);margin-bottom:14px;display:none}
+    #p-err{font-size:12px;color:#ef4444;background:rgba(239,68,68,.08);border:.5px solid rgba(239,68,68,.25);border-radius:8px;padding:8px;margin-top:8px;display:none}
+    #app-patron{display:none;max-width:960px;margin:0 auto;padding:20px 16px}
+    .pat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .pat-title{font-size:18px;font-weight:700;background:linear-gradient(135deg,#8b5cf6,#f0c97e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .btn-logout{background:rgba(239,68,68,.1);border:.5px solid rgba(239,68,68,.3);color:#ef4444;border-radius:7px;padding:6px 12px;cursor:pointer;font-size:12px}
+    .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+    .stat{background:#0f1013;border:.5px solid rgba(255,255,255,.07);border-radius:12px;padding:14px;text-align:center}
+    .stat-l{font-size:9px;color:#3d4260;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+    .stat-v{font-size:22px;font-weight:700}
+    .bot-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:500;border:.5px solid;margin-bottom:16px}
+    .tabs{display:flex;gap:4px;background:#0f1013;border-radius:10px;padding:4px;margin-bottom:16px;flex-wrap:wrap}
+    .tab{padding:8px 14px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:500;color:#7a7f96;border:none;background:transparent;transition:all .15s}
+    .tab.a{background:#1e2028;color:var(--acc);border:.5px solid var(--acc-b)}
+    .section{background:#0f1013;border:.5px solid rgba(255,255,255,.07);border-radius:14px;padding:18px}
+    .sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+    .sec-title i{font-size:14px}
+    .fg{margin-bottom:12px}
+    .fg label{font-size:11px;color:#7a7f96;display:block;margin-bottom:4px}
+    .fg .hint{font-size:10px;color:#3d4260;margin-top:3px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:.5px solid rgba(255,255,255,.12);background:transparent;color:#eceef3;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:all .15s}
+    .btn:hover{background:#1e2028}
+    .btn-gold{background:var(--acc-d);border-color:var(--acc-b);color:var(--acc)}
+    .btn-gold:hover{background:rgba(201,168,76,.22)}
+    .btn-solid{background:linear-gradient(135deg,#8b5cf6,#b8922e);color:#000;border:none;font-weight:700}
+    .btn-green{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#22c55e}
+    .btn-red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#ef4444}
+    .sep{height:.5px;background:rgba(255,255,255,.07);margin:16px 0}
+    @media(max-width:600px){.stats4{grid-template-columns:repeat(2,1fr)}.row2,.row3{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div id="login-patron">
+  <div class="lc">
+    <h2>👑 Dashboard Patron</h2>
+    <p>Accès réservé au responsable</p>
+    <div class="lc-setup" id="p-setup">Premier accès — créez votre mot de passe</div>
+    <label>Mot de passe</label>
+    <input type="password" id="p-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginPatron()">
+    <button class="lc-btn" onclick="loginPatron()">Accéder</button>
+    <div id="p-err"></div>
+  </div>
+</div>
+
+<div id="app-patron">
+  <div class="pat-header">
+    <div>
+      <div class="pat-title" id="p-titre">Dashboard Patron</div>
+      <div id="p-ent" style="font-size:12px;color:#7a7f96;margin-top:2px"></div>
+    </div>
+    <button class="btn-logout" onclick="logoutPatron()"><i class="ti ti-logout"></i> Déconnexion</button>
+  </div>
+
+  <!-- Statut bot -->
+  <div id="bot-status-bar" style="margin-bottom:16px"></div>
+
+  <div class="stats4">
+    <div class="stat"><div class="stat-l">Employés</div><div class="stat-v" style="color:var(--acc)" id="ps-emp">—</div></div>
+    <div class="stat"><div class="stat-l">CA ce mois</div><div class="stat-v" id="ps-ca">—</div></div>
+    <div class="stat"><div class="stat-l">CV en attente</div><div class="stat-v" style="color:#facc15" id="ps-cv">—</div></div>
+    <div class="stat"><div class="stat-l">Abs. en attente</div><div class="stat-v" style="color:#ef4444" id="ps-abs">—</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab a" onclick="swTab(this,'t-equipe')">Équipe</button>
+    <button class="tab" onclick="swTab(this,'t-cv')">CV</button>
+    <button class="tab" onclick="swTab(this,'t-absences')">Absences</button>
+    <button class="tab" onclick="swTab(this,'t-customs')">Customs</button>
+    <button class="tab" onclick="swTab(this,'t-recap')">Récap Discord</button>
+    <button class="tab" onclick="swTab(this,'t-params');loadParams()">⚙️ Paramètres</button>
+  </div>
+
+  <div id="t-equipe" class="section"><div class="sec-title"><i class="ti ti-users"></i>Équipe</div><div id="equipe-list"></div></div>
+  <div id="t-cv" class="section" style="display:none"><div class="sec-title"><i class="ti ti-file-text"></i>CV en attente</div><div id="cv-list"></div></div>
+  <div id="t-absences" class="section" style="display:none"><div class="sec-title"><i class="ti ti-calendar-off"></i>Absences</div><div id="absences-list"></div></div>
+  <div id="t-customs" class="section" style="display:none"><div class="sec-title"><i class="ti ti-package"></i>Customs récentes</div><div id="prods-list"></div></div>
+  <div id="t-recap" class="section" style="display:none">
+    <div class="sec-title"><i class="ti ti-brand-discord"></i>Envoyer récap paie Discord</div>
+    <div style="font-size:12px;color:#7a7f96;margin-bottom:12px">Envoie un embed dans le channel annonces avec la paie estimée de chaque employé ce mois.</div>
+    <div class="fg"><label>Message d'accompagnement (optionnel)</label><textarea id="recap-msg" rows="3" placeholder="Bravo à toute l'équipe pour ce mois !"></textarea></div>
+    <button class="btn btn-gold" onclick="envoyerRecap()"><i class="ti ti-send"></i> Envoyer dans Discord</button>
+  </div>
+
+  <!-- PARAMÈTRES — tout configurable depuis ici -->
+  <div id="t-params" class="section" style="display:none">
+    <div class="sec-title"><i class="ti ti-settings"></i>Paramètres</div>
+
+    <!-- Bot -->
+    <div style="background:#08090b;border:.5px solid var(--acc-b);border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px"><i class="ti ti-brand-discord" style="margin-right:5px"></i>Bot Discord</div>
+      <div class="fg"><label>Token Discord *</label>
+        <div style="position:relative">
+          <input type="password" id="cfg-discord_token" placeholder="Colle le token du bot ici…" style="padding-right:44px">
+          <button onclick="toggleTok()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#7a7f96;cursor:pointer;font-size:16px"><i class="ti ti-eye" id="tok-eye"></i></button>
+        </div>
+        <div class="hint">Laissez vide pour conserver le token actuel. Ne partagez jamais ce token.</div>
+      </div>
+      <div class="row2">
+        <div class="fg"><label>Client ID</label><input type="text" id="cfg-discord_client_id" placeholder="Application ID"></div>
+        <div class="fg"><label>Guild ID (ID du serveur Discord)</label><input type="text" id="cfg-guild_id" placeholder="ID du serveur"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-green" onclick="startBot()"><i class="ti ti-player-play"></i> Démarrer le bot</button>
+        <button class="btn btn-red" onclick="stopBot()"><i class="ti ti-player-stop"></i> Arrêter</button>
+      </div>
+    </div>
+
+    <!-- Entreprise -->
+    <div style="background:#08090b;border:.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Entreprise</div>
+      <div class="row3">
+        <div class="fg"><label>Nom</label><input type="text" id="cfg-entreprise_nom" placeholder="Mon Entreprise RP"></div>
+        <div class="fg"><label>Emoji</label><input type="text" id="cfg-entreprise_emoji" placeholder="🔧" maxlength="4" style="text-align:center;font-size:18px"></div>
+        <div class="fg"><label>Couleur</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div id="col-swatch" style="width:32px;height:32px;border-radius:6px;background:#8b5cf6;border:.5px solid rgba(255,255,255,.15);cursor:pointer;flex-shrink:0" onclick="document.getElementById('cfg-entreprise_couleur_pick').click()"></div>
+            <input type="text" id="cfg-entreprise_couleur" value="#8b5cf6" style="flex:1" oninput="document.getElementById('col-swatch').style.background=this.value">
+            <input type="color" id="cfg-entreprise_couleur_pick" value="#8b5cf6" style="opacity:0;position:absolute" oninput="document.getElementById('cfg-entreprise_couleur').value=this.value;document.getElementById('col-swatch').style.background=this.value">
+          </div>
+        </div>
+      </div>
+      <div class="fg"><label>Salaire de base / heure ($)</label><input type="number" id="cfg-" placeholder="50" min="0" step="10" style="max-width:140px"></div>
+    </div>
+
+    <!-- Channels -->
+    <div style="background:#08090b;border:.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Channels Discord (IDs)</div>
+      <div class="row2">
+        <div class="fg"><label><i class="ti ti-file-text" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel CV</label><input type="text" id="cfg-channel_cv" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-terminal-2" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Logs</label><input type="text" id="cfg-channel_logs" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-tool" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Customs</label><input type="text" id="cfg-channel_customs" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-shopping-cart" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Ventes</label><input type="text" id="cfg-" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-bell" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Alertes</label><input type="text" id="cfg-channel_alertes" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-door-enter" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Welcome</label><input type="text" id="cfg-channel_welcome" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-speakerphone" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Annonces (récap paie)</label><input type="text" id="cfg-channel_annonces" placeholder="ID du channel"></div>
+        <div class="fg"><label><i class="ti ti-calendar-off" style="font-size:12px;opacity:.7;margin-right:3px"></i>Channel Absences</label><input type="text" id="cfg-channel_absences" placeholder="ID du channel"></div>
+      </div>
+    </div>
+
+    <!-- Rôles -->
+    <div style="background:#08090b;border:.5px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Rôles Discord (IDs)</div>
+      <div class="row3">
+        <div class="fg"><label><i class="ti ti-user" style="font-size:12px;opacity:.7;margin-right:3px"></i>Rôle Employé</label><input type="text" id="cfg-role_employe" placeholder="ID du rôle"></div>
+        <div class="fg"><label><i class="ti ti-clock" style="font-size:12px;opacity:.7;margin-right:3px"></i>Rôle Attente entretien</label><input type="text" id="cfg-role_attente_entretien" placeholder="ID du rôle"></div>
+        <div class="fg"><label><i class="ti ti-crown" style="font-size:12px;opacity:.7;margin-right:3px"></i>Rôle Patron</label><input type="text" id="cfg-role_patron" placeholder="ID du rôle"></div>
+      </div>
+    </div>
+
+    <button class="btn btn-solid" onclick="sauvegarderParams()" style="font-size:14px;padding:11px 24px">
+      <i class="ti ti-device-floppy"></i> Sauvegarder tous les paramètres
+    </button>
+  </div>
+</div>
+
+<script>
+const api  = async (u,o={}) => (await fetch(u,{headers:{'Content-Type':'application/json'},credentials:'same-origin',...o})).json()
+const post = (u,b) => api(u,{method:'POST',body:JSON.stringify(b)})
+const put  = (u,b) => api(u,{method:'PUT', body:JSON.stringify(b)})
+const el   = id => document.getElementById(id)
+const fmtD = s  => s ? new Date(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—'
+const fmt  = n  => Number(n||0).toLocaleString('fr-FR')
+let _couleur='#8b5cf6', _data=null, _grades=[]
+
+function swTab(btn,..._){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('a')); btn.classList.add('a')
+  const show=btn.getAttribute('onclick').match(/'([^']+)'/)[1]
+  document.querySelectorAll('[id^="t-"]').forEach(e=>e.style.display='none')
+  el(show).style.display=''
+}
+
+async function initPatron(){
+  const me=await api('/api/auth/me').catch(()=>({}))
+  if(me.role==='patron'){ launchPatron(); return }
+  const t=await post('/api/patron/login',{password:'__probe__'})
+  if(t.setup) el('p-setup').style.display='block'
+}
+async function loginPatron(){
+  const d=await post('/api/patron/login',{password:el('p-pwd').value})
+  if(d.error){ el('p-err').textContent=d.error; el('p-err').style.display='block'; return }
+  launchPatron()
+}
+async function launchPatron(){ el('login-patron').style.display='none'; el('app-patron').style.display='block'; await loadDashboard() }
+async function logoutPatron(){ await post('/api/patron/logout',{}); location.reload() }
+
+async function loadDashboard(){
+  _data=await api('/api/patron/dashboard')
+  _grades=await api('/api/patron/grades')
+  _couleur=_data.config?.couleur||'#8b5cf6'
+  document.documentElement.style.setProperty('--acc',_couleur)
+  document.documentElement.style.setProperty('--acc-b',_couleur+'55')
+  document.documentElement.style.setProperty('--acc-d',_couleur+'18')
+  const et=el('p-ent'); if(et) et.textContent=(_data.config?.emoji||'🔧')+' '+(_data.config?.nom||'')
+  const ss=(id,v)=>{ const e=el(id); if(e) e.textContent=v }
+  ss('ps-emp',_data.stats.employes); ss('ps-ca','$'+fmt(_data.stats.ca_mois))
+  ss('ps-cv',_data.stats.cv_att); ss('ps-abs',_data.stats.abs_att)
+  // Statut bot
+  const bar=el('bot-status-bar')
+  if(bar) bar.innerHTML=_data.bot_ok
+    ?`<span class="bot-pill" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#22c55e"><span style="width:7px;height:7px;border-radius:50%;background:#22c55e"></span>Bot en ligne — ${_data.config?.nom||'Bot'}</span>`
+    :`<span class="bot-pill" style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.25);color:#ef4444"><span style="width:7px;height:7px;border-radius:50%;background:#ef4444"></span>Bot hors ligne — <span style="cursor:pointer;text-decoration:underline" onclick="swTab(document.querySelector('[onclick*=t-params]'))">Configurer dans Paramètres</span></span>`
+  renderEquipe(_data.equipe); renderCV(_data.cv_att); renderAbsences(_data.absences); renderCustoms(_data.customs)
+}
+
+function renderEquipe(equipe){
+  const list=el('equipe-list'); if(!list) return
+  list.innerHTML=equipe.map(emp=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.06)">
+      <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:${emp.grade_couleur||_couleur}22;border:.5px solid ${emp.grade_couleur||_couleur}44;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:${emp.grade_couleur||_couleur}">
+        ${emp.discord_avatar?`<img src="${emp.discord_avatar}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`:((emp.discord_tag||'??').slice(0,2).toUpperCase())}
+      </div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${emp.discord_tag}</div><div style="font-size:11px;color:${emp.grade_couleur||_couleur}">${emp.grade}</div></div>
+      <div style="display:flex;gap:6px">
+        <select onchange="changerGrade('${emp.discord_id}',this)" style="font-size:11px;padding:4px 6px;width:130px">
+          ${_grades.map(g=>`<option value="${g.nom}" ${g.nom===emp.grade?'selected':''}>${g.emoji||''} ${g.nom}</option>`).join('')}
+        </select>
+        <button onclick="avertir('${emp.discord_id}','${emp.discord_tag}')" class="btn btn-red" style="padding:5px 8px"><i class="ti ti-alert-triangle"></i></button>
+      </div>
+    </div>`).join('')||'<div style="color:#3d4260;font-size:12px;text-align:center;padding:16px">Aucun employé</div>'
+}
+async function changerGrade(id,sel){ const d=await put(`/api/patron/employes/${id}`,{grade:sel.value}); d.ok?(toast('Grade mis à jour','success'),loadDashboard()):toast(d.error,'error') }
+async function avertir(id,tag){ const msg=prompt(`Avertissement pour ${tag} :`); if(!msg) return; const d=await put(`/api/patron/employes/${id}`,{avertissement:msg}); d.ok?toast('Avertissement envoyé','success'):toast(d.error,'error') }
+
+function renderCV(cvs){
+  const list=el('cv-list'); if(!list) return
+  list.innerHTML=cvs.length?cvs.map(cv=>{
+    const reps=JSON.parse(cv.reponses||'{}')
+    return `<div style="background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.07);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="font-weight:600">${cv.discord_tag}</div><div style="font-size:11px;color:#7a7f96">${fmtD(cv.date_soumission)}</div></div>
+      ${Object.entries(reps).map(([q,r])=>`<div style="font-size:12px;margin-bottom:6px"><span style="color:#7a7f96">${q}</span><br><span>${r}</span></div>`).join('')}
+      <textarea id="note-cv-${cv.id}" placeholder="Note…" rows="2" style="margin-top:8px;font-size:12px"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="traiterCV(${cv.id},'accepte')" class="btn btn-green" style="flex:1;justify-content:center"><i class="ti ti-check"></i> Accepter</button>
+        <button onclick="traiterCV(${cv.id},'refuse')" class="btn btn-red" style="flex:1;justify-content:center"><i class="ti ti-x"></i> Refuser</button>
+      </div>
+    </div>`
+  }).join(''):'<div style="color:#3d4260;font-size:12px;text-align:center;padding:16px">Aucun CV en attente</div>'
+}
+async function traiterCV(id,statut){ const d=await put(`/api/patron/cv/${id}`,{statut,note:el(`note-cv-${id}`)?.value||''}); d.ok?(toast(statut==='accepte'?'CV accepté ✅':'CV refusé','success'),loadDashboard()):toast(d.error,'error') }
+
+function renderAbsences(absences){
+  const list=el('absences-list'); if(!list) return
+  const pills={en_attente:'rgba(250,204,21,.12)|rgba(250,204,21,.3)|#facc15|En attente',accepte:'rgba(34,197,94,.1)|rgba(34,197,94,.3)|#22c55e|Acceptée',refuse:'rgba(239,68,68,.1)|rgba(239,68,68,.3)|#ef4444|Refusée'}
+  list.innerHTML=absences.length?absences.map(a=>{
+    const [bg,bd,col,lbl]=(pills[a.statut]||pills.en_attente).split('|'), ip=a.statut==='en_attente'
+    return `<div style="background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.07);border-radius:10px;padding:12px;margin-bottom:7px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div><div style="font-size:13px;font-weight:500">${a.discord_tag} <span style="font-size:11px;color:${_couleur}">${a.grade}</span></div>
+          <div style="font-size:12px;color:#7a7f96;margin-top:2px">${a.date_debut} → ${a.date_fin}</div>
+          <div style="font-size:11px;color:#3d4260;margin-top:2px">${a.raison||'—'}</div></div>
+        <span style="background:${bg};border:.5px solid ${bd};border-radius:99px;padding:2px 9px;font-size:10px;color:${col}">${lbl}</span>
+      </div>
+      ${ip?`<textarea id="note-abs-${a.id}" placeholder="Note…" rows="1" style="font-size:12px;margin-bottom:6px"></textarea>
+        <div style="display:flex;gap:6px">
+          <button onclick="traiterAbsence(${a.id},'accepte')" class="btn btn-green" style="flex:1;justify-content:center"><i class="ti ti-check"></i> Accepter</button>
+          <button onclick="traiterAbsence(${a.id},'refuse')" class="btn btn-red" style="flex:1;justify-content:center"><i class="ti ti-x"></i> Refuser</button>
+        </div>`:a.note_patron?`<div style="font-size:11px;color:${_couleur}">Note : ${a.note_patron}</div>`:''}
+    </div>`
+  }).join(''):'<div style="color:#3d4260;font-size:12px;text-align:center;padding:12px">Aucune absence</div>'
+}
+async function traiterAbsence(id,statut){ const d=await put(`/api/patron/absences/${id}`,{statut,note:el(`note-abs-${id}`)?.value||''}); d.ok?(toast(statut==='accepte'?'Absence acceptée ✅':'Absence refusée','success'),loadDashboard()):toast(d.error,'error') }
+
+function renderProds(prods){
+  const list=el('prods-list'); if(!list) return
+  list.innerHTML=prods.length?prods.map(p=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid rgba(255,255,255,.06);font-size:12px">
+      <span style="padding:2px 8px;border-radius:99px;font-size:10px;background:${p.type==='vente'?'rgba(34,197,94,.1)':'rgba(96,165,250,.1)'};color:${p.type==='vente'?'#22c55e':'#60a5fa'};border:.5px solid ${p.type==='vente'?'rgba(34,197,94,.25)':'rgba(96,165,250,.25)'}">${p.type==='vente'?'Vente':'Prod'}</span>
+      <span style="flex:1">${p.article}</span><span style="color:#7a7f96">${p.discord_tag}</span>
+      ${p.prix?`<span style="color:${_couleur};font-weight:600">$${fmt(p.prix)}</span>`:''}
+      ${p.preuve_filename?`<a href="/uploads/${p.preuve_filename}" target="_blank" style="color:#60a5fa"><i class="ti ti-photo"></i></a>`:''}
+      <span style="color:#3d4260">${fmtD(p.date)}</span>
+    </div>`).join(''):'<div style="color:#3d4260;font-size:12px;text-align:center;padding:12px">Aucune déclaration</div>'
+}
+
+async function envoyerRecap(){
+  const d=await post('/api/patron/debrief',{message:el('recap-msg')?.value||''})
+  d.ok?toast('Récap envoyé ✅','success'):toast(d.error||'Erreur','error')
+}
+
+// ── PARAMÈTRES ────────────────────────────────────────────────
+async function loadParams(){
+  const p=await api('/api/patron/parametres')
+  for(const [k,v] of Object.entries(p)){
+    const inp=el(`cfg-${k}`)
+    if(inp){ inp.value=v; if(k==='entreprise_couleur'){ const sw=el('col-swatch'); if(sw) sw.style.background=v } }
+  }
+}
+
+async function sauvegarderParams(){
+  const data={}
+  document.querySelectorAll('[id^="cfg-"]').forEach(inp=>{
+    const key=inp.id.replace('cfg-','').replace('_pick','')
+    if(!key.endsWith('_pick')) data[key]=inp.value
+  })
+  const d=await post('/api/patron/parametres',data)
+  if(d.ok){
+    toast(d.bot_warn?`Sauvegardé — Bot : ${d.bot_warn}`:'Paramètres sauvegardés ✅','success')
+    loadDashboard()
+  } else toast(d.error||'Erreur','error')
+}
+
+async function startBot(){ const d=await post('/api/patron/bot/start',{}); d.ok?toast(`Bot connecté ✅`,'success'):toast(d.error,'error'); loadDashboard() }
+async function stopBot(){  const d=await post('/api/patron/bot/stop', {}); d.ok?toast('Bot arrêté','warn'):toast(d.error,'error'); loadDashboard() }
+
+function toggleTok(){ const i=el('cfg-discord_token'),eye=el('tok-eye'); i.type=i.type==='password'?'text':'password'; eye.className=i.type==='password'?'ti ti-eye':'ti ti-eye-off' }
+
+function toast(msg,type='success'){
+  const cols={success:_couleur,error:'#ef4444',warn:'#facc15',info:_couleur}
+  const t=document.createElement('div')
+  t.style.cssText=`position:fixed;bottom:20px;right:20px;background:#0f1013;border:.5px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;font-size:13px;color:${cols[type]};z-index:999;animation:slideIn .3s ease;max-width:320px`
+  t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),4000)
+}
+
+initPatron()
+</script>
+</body>
+</html>

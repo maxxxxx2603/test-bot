@@ -1,0 +1,16 @@
+{
+  "name": "custom-bot",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": { "start": "node src/index.js" },
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "better-sqlite3": "^11.1.2",
+    "bcryptjs": "^2.4.3",
+    "multer": "1.4.5-lts.1",
+    "dotenv": "^16.4.5"
+  },
+  "engines": { "node": ">=18.0.0" }
+}
